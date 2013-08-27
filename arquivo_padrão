@@ -1,6 +1,6 @@
-# Tudo após # é ignorado
+# Tudo após # é ignorado até o final da linha
 # Alfabeto (# e espaço não podem ser simbolos num alfabeto)
-a b c d e f g h i j k l m n o p q r s t u v w x y z
+a b c d e f g h i j k l m n o p q r s t u v w x y z 1 2 3 4 +
 # Linha em branco separando dados
 
 # Constante para a função do cálculo da vizinhança
