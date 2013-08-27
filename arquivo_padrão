@@ -1,0 +1,23 @@
+# Tudo após # é ignorado
+# Alfabeto (# e espaço não podem ser simbolos num alfabeto)
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+# Linha em branco separando dados
+
+# Constante para a função do cálculo da vizinhança
+123.456
+
+# Matriz de dados. As linhas são os vértices dos dados e as colunas são as informações
+a b a c d e k z
+b c d f g a f l
+c d d b b a e d
+c d e f g a w y
+k l m n o p x a
+
+# Matriz indicando possíveis vizinhos
+1 0 0 1 0 1
+0 1 1 0 0 1
+1 0 1 0 0 1
+1 0 0 1 0 1
+1 0 1 0 0 0
+
+# Dados devem estar nessa ordem

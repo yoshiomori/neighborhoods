@@ -1,0 +1,8 @@
+Entrada:
+	Matriz de dados;
+	Matriz de possíveis vizinhos;
+	
+
+Saída:
+	Vizinhos que maximizam a função.
+
