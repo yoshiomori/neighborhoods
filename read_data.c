@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "glob.h"
+#include "alphabet.h"
 
 #define BUFFER_SIZE 1000
 
@@ -42,6 +43,14 @@ char *read_line(FILE *file){
     size_of_line += read_chars;
 
   } while(!is_line_over);
+
+  if(line[0] == '#'){
+    free(line);
+    line = NULL;
+  }
+
+  while(!line && !feof(file))
+    line  = read_line(file);
   
   return line;
 }
@@ -50,6 +59,7 @@ char *read_line(FILE *file){
  * e lê a informação e atribui nas variáveis do programa.                */
 void read_data(int argc, char **argv){
   FILE *file = NULL;
+  /*teste char *line = NULL;*/
 
   if(argc != 2)
     info();
@@ -60,7 +70,11 @@ void read_data(int argc, char **argv){
     }
 
     /* Lendo o arquivo */
-    while(!feof(file))
-      printf("%s\n", read_line(file));
+    /*Teste while(!feof(file))
+      if((line = read_line(file)))
+	printf("%s\n", line);
+      else
+      printf("NULL\n");*/
+    insert_alphabet(read_line(file));
   }
 }
