@@ -1,8 +1,9 @@
+/* O alfabeto foi implementado com hashing linear probing */
+
 #include "alphabet.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-#define null(A) (alphabet[A] == NULL)
+#include <string.h>
 
 int prime[] = {
   251,
@@ -32,6 +33,7 @@ int prime[] = {
 };
 
 static char **alphabet = NULL;
+static char **symbol = NULL;
 
 static int length_vector = 0, iprime = 0, vector_free_space = 0;
 
@@ -45,72 +47,122 @@ void memory_error(){
   exit(0);
 }
 
-int hash(char **s){
+/* Função hash para string */
+int hash(char *s){
   int h = 0;
-  int size_ascii_less_space_and_sharp = 254;
-  for(h = 0; **s && **s != ' '; (*s)++)
-    h = (size_ascii_less_space_and_sharp * h + **s) % length_vector;
+  
+  /* O valor 254 abaixo é a quantidade de caracteres no ascii sem *
+   * o espaço e o cerquilha.                                      */
+  if(length_vector)
+    for(h = 0; *s; s++)
+      h = (254 * h + *s) % length_vector;
   return h;
 }
 
-void alloc_alphabet(){
-  int i = 0;
-  /* Verificando se o alphabet precisa de espaço */
-  if(alphabet){
-    /* Realocando espaço */
-    if(vector_free_space <= length_vector / 2){
-      i = length_vector;
-      length_vector = prime[iprime++];
-      vector_free_space = length_vector - vector_free_space;
-      if(!(alphabet = realloc(alphabet, length_vector * sizeof(*alphabet))))
-	memory_error();
-      for(; i < length_vector; i++)
-	alphabet[i] = NULL;
-    }
-  }
-  else{
-    /* Alocando espaço */
-    vector_free_space = length_vector = prime[iprime++];
-    if(!(alphabet = malloc(length_vector * sizeof(*alphabet))))
-      memory_error();
-    for(i = 0; i < length_vector; i++)
-      alphabet[i] = NULL;
-  }
-}
-
-char *search_alphabet(char *character){
-  return NULL;
-}
-
-void insert_symbol(char **character){
-  char *c = *character;
+/* insere o símbolo no alfabeto */
+void insert_alphabet(char *character){
   int i = hash(character);
-  while(!null(i))
+  while(alphabet[i] != NULL)
     i = (i + 1) % length_vector;
-  alphabet[i] = c;
+  alphabet[i] = character;
   vector_free_space--;
 }
 
-/* pula os espaços */
-void jump_spaces(char **character){
-  while(**character && **character == ' '){
-    **character = '\0';
-    (*character)++;
+/* aloca espaço sempre que o vetor alcança metade das posições ocupadas */
+void alloc_alphabet(){
+  char **aux_alphabet = alphabet;
+  int aux_length_vector = length_vector;
+  int i = 0;
+
+  /* Verificando se o alphabet precisa de espaço */
+  if(vector_free_space <= length_vector / 2){
+
+    /* alocando */
+    vector_free_space = length_vector = prime[iprime++];
+    if(!(alphabet = calloc(length_vector, sizeof(*alphabet))))
+      memory_error();
+
+    /* Reinserindo os símbolos no novo vetor */
+    for(i = 0; i < aux_length_vector; i++)
+      if(aux_alphabet[i])
+	insert_alphabet(aux_alphabet[i]);
+    free(aux_alphabet);
   }
 }
 
-void insert_alphabet(char *character){
-  if(!character)
+char *search_alphabet(char *symbol){
+  int i = hash(symbol);
+  if(alphabet)
+    while(alphabet[i] != NULL)
+      if(!strcmp(symbol, alphabet[i]))
+	return alphabet[i];
+      else
+	i = (i + 1) % length_vector;
+  return NULL;
+}
+
+/* Recebe uma linha com os characters e insere os caracteres no alfabeto */
+void create_alphabet(char *line){
+  char *aux = NULL;
+  int state = 0;
+  int number_words = 0;
+  int isymbol = 0;
+
+  if(!line)
     format_error();
 
-  while(*character){
-    jump_spaces(&character);
-    
-    /* inserindo simbolos no alfabeto */
-    alloc_alphabet();
-    insert_symbol(&character);
+  /* Contando palavras */
+  for(aux = line; *aux; aux++)
+    switch(state){
+    case 0:
+      if(*aux != ' '){
+	state = 1;
+	number_words++;
+      }
+      break;
+    case 1:
+      if(*aux == ' ')
+	state = 0;
+      break;
+    }
+
+  if(!(symbol = malloc(number_words * sizeof *symbol))){
+    printf("Memória insuficiente");
+    exit(0);
   }
-  for(; length_vector; length_vector--, alphabet++)
-    if(*alphabet)
-      printf("%s\n", *alphabet);
+
+  /* Deletando espaços e guardando os simbolos no vetor de simbolos*/
+  for(state = 0; *line; line++){
+    switch(state){
+    case 0:
+      if(*line != ' '){
+	state = 1;
+	symbol[isymbol++] = line;
+      }
+      else
+	*line = '\0';
+      break;
+    case 1:
+      if(*line == ' '){
+	state = 0;
+	*line = '\0';
+      }
+      break;
+    }
+  }
+  
+  /* inserindo simbolos no alfabeto */
+  for(isymbol = 0; isymbol < number_words; isymbol++){
+    if(!search_alphabet(symbol[isymbol])){
+      alloc_alphabet();
+      insert_alphabet(symbol[isymbol]);
+    }
+    else
+      printf("Letra %s repetiu\n", symbol[isymbol]);
+  }
+}
+
+void delete_alphabet(){
+  free(alphabet);
+  free(symbol);
 }

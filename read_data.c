@@ -70,11 +70,7 @@ void read_data(int argc, char **argv){
     }
 
     /* Lendo o arquivo */
-    /*Teste while(!feof(file))
-      if((line = read_line(file)))
-	printf("%s\n", line);
-      else
-      printf("NULL\n");*/
-    insert_alphabet(read_line(file));
+    create_alphabet(read_line(file));
+    
   }
 }
