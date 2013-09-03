@@ -7,6 +7,9 @@
  *     Um arquivo contendo a matriz da vizinhança.                           */
 
 #include "read_data.h"
+#include "glob.h"
+
+Data data;
 
 int main(int argc, char **argv){
   /* Leitura dos dados */

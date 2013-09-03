@@ -4,7 +4,7 @@ a b c d e f g h i j k l m n o p q r s t u v w x y z 1 2 3 4 + :) aa ab abc ...
 # Linha em branco separando dados
 
 # Constante para a função do cálculo da vizinhança
-123.456
+123.45600
 
 # Matriz de dados. As linhas representam os vértices e as colunas são as informações (Matriz nxm, n vértices com m informações)
 a b a c d e k z + ...

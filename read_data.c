@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "glob.h"
 #include "alphabet.h"
+#include "constant.h"
+#include "vertice.h"
+
+extern Data data;
 
 #define BUFFER_SIZE 1000
 
@@ -59,6 +64,7 @@ char *read_line(FILE *file){
  * e lê a informação e atribui nas variáveis do programa.                */
 void read_data(int argc, char **argv){
   FILE *file = NULL;
+  char *line = NULL;
   /*teste char *line = NULL;*/
 
   if(argc != 2)
@@ -70,7 +76,11 @@ void read_data(int argc, char **argv){
     }
 
     /* Lendo o arquivo */
-    create_alphabet(read_line(file));
-    
+    read_alphabet(read_line(file));
+    read_line(file);
+    read_constant(read_line(file));
+    read_line(file);
+    while(!end_read_vertice((line = read_line(file))))
+      read_vertice(line);
   }
 }

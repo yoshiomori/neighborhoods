@@ -1,9 +1,13 @@
 /* O alfabeto foi implementado com hashing linear probing */
 
-#include "alphabet.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "alphabet.h"
+#include "glob.h"
+
+extern Data data;
 
 int prime[] = {
   251,
@@ -32,7 +36,6 @@ int prime[] = {
   2147483647
 };
 
-static char **alphabet = NULL;
 static char **symbol = NULL;
 
 static int length_vector = 0, iprime = 0, vector_free_space = 0;
@@ -62,15 +65,15 @@ int hash(char *s){
 /* insere o símbolo no alfabeto */
 void insert_alphabet(char *character){
   int i = hash(character);
-  while(alphabet[i] != NULL)
+  while(data.alphabet[i] != NULL)
     i = (i + 1) % length_vector;
-  alphabet[i] = character;
+  data.alphabet[i] = character;
   vector_free_space--;
 }
 
 /* aloca espaço sempre que o vetor alcança metade das posições ocupadas */
 void alloc_alphabet(){
-  char **aux_alphabet = alphabet;
+  char **aux_alphabet = data.alphabet;
   int aux_length_vector = length_vector;
   int i = 0;
 
@@ -79,7 +82,7 @@ void alloc_alphabet(){
 
     /* alocando */
     vector_free_space = length_vector = prime[iprime++];
-    if(!(alphabet = calloc(length_vector, sizeof(*alphabet))))
+    if(!(data.alphabet = calloc(length_vector, sizeof(*data.alphabet))))
       memory_error();
 
     /* Reinserindo os símbolos no novo vetor */
@@ -92,21 +95,23 @@ void alloc_alphabet(){
 
 char *search_alphabet(char *symbol){
   int i = hash(symbol);
-  if(alphabet)
-    while(alphabet[i] != NULL)
-      if(!strcmp(symbol, alphabet[i]))
-	return alphabet[i];
+  if(data.alphabet)
+    while(data.alphabet[i] != NULL)
+      if(!strcmp(symbol, data.alphabet[i]))
+	return data.alphabet[i];
       else
 	i = (i + 1) % length_vector;
   return NULL;
 }
 
 /* Recebe uma linha com os characters e insere os caracteres no alfabeto */
-void create_alphabet(char *line){
+void read_alphabet(char *line){
   char *aux = NULL;
   int state = 0;
   int number_words = 0;
   int isymbol = 0;
+
+  data.alphabet = NULL;
 
   if(!line)
     format_error();
@@ -158,11 +163,11 @@ void create_alphabet(char *line){
       insert_alphabet(symbol[isymbol]);
     }
     else
-      printf("Letra %s repetiu\n", symbol[isymbol]);
+      printf("Letra %s repetiu no alfabeto.\n", symbol[isymbol]);
   }
 }
 
 void delete_alphabet(){
-  free(alphabet);
+  free(data.alphabet);
   free(symbol);
 }
