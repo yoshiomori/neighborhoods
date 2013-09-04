@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "alphabet.h"
-#include "glob.h"
+#include "data.h"
 
 extern Data data;
 
@@ -106,64 +106,23 @@ char *search_alphabet(char *symbol){
 
 /* Recebe uma linha com os characters e insere os caracteres no alfabeto */
 void read_alphabet(char *line){
-  char *aux = NULL;
-  int state = 0;
-  int number_words = 0;
-  int isymbol = 0;
+  char **aux = NULL;
 
   data.alphabet = NULL;
 
   if(!line)
     format_error();
 
-  /* Contando palavras */
-  for(aux = line; *aux; aux++)
-    switch(state){
-    case 0:
-      if(*aux != ' '){
-	state = 1;
-	number_words++;
-      }
-      break;
-    case 1:
-      if(*aux == ' ')
-	state = 0;
-      break;
-    }
-
-  if(!(symbol = malloc(number_words * sizeof *symbol))){
-    printf("Memória insuficiente");
-    exit(0);
-  }
-
-  /* Deletando espaços e guardando os simbolos no vetor de simbolos*/
-  for(state = 0; *line; line++){
-    switch(state){
-    case 0:
-      if(*line != ' '){
-	state = 1;
-	symbol[isymbol++] = line;
-      }
-      else
-	*line = '\0';
-      break;
-    case 1:
-      if(*line == ' '){
-	state = 0;
-	*line = '\0';
-      }
-      break;
-    }
-  }
+  symbol = chop(line);
   
   /* inserindo simbolos no alfabeto */
-  for(isymbol = 0; isymbol < number_words; isymbol++){
-    if(!search_alphabet(symbol[isymbol])){
+  for(aux = symbol; *aux; aux++){
+    if(!search_alphabet(*aux)){
       alloc_alphabet();
-      insert_alphabet(symbol[isymbol]);
+      insert_alphabet(*aux);
     }
     else
-      printf("Letra %s repetiu no alfabeto.\n", symbol[isymbol]);
+      printf("Letra %s repetiu no alfabeto.\n", *aux);
   }
 }
 

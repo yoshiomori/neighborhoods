@@ -1,22 +1,22 @@
 FLAGS := -Wall -pedantic -ansi
 
-neighborhood: main.o read_data.o alphabet.o constant.o vertice.o
+neighborhood: main.o data.o alphabet.o constant.o vertice.o
 	gcc -o neighborhood $^
 
-main.o: main.c read_data.h
+main.o: main.c data.h
 	gcc -c $(FLAGS) $<
 
-read_data.o: read_data.c read_data.h alphabet.h constant.h vertice.h
+data.o: data.c data.h alphabet.h constant.h vertice.h
 	gcc -c $(FLAGS) $<
 
-alphabet.o: alphabet.c alphabet.h glob.h
+alphabet.o: alphabet.c alphabet.h data.h
 	gcc -c $(FLAGS) $<
 
-constant.o: constant.c glob.h
+constant.o: constant.c data.h
 	gcc -c $(FLAGS) $<
 
-vertice.o: vertice.c vertice.h
+vertice.o: vertice.c vertice.h data.h alphabet.h
 	gcc -c $(FLAGS) $<
 
 clean:
-	rm *.o *~ neighborhood
+	rm *.o *~ neighborhood \#*

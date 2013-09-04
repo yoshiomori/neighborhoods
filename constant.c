@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "glob.h"
+#include "data.h"
 
 extern Data data;
 

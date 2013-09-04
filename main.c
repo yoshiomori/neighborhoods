@@ -6,8 +6,7 @@
  * A função main retorna:                                                    *
  *     Um arquivo contendo a matriz da vizinhança.                           */
 
-#include "read_data.h"
-#include "glob.h"
+#include "data.h"
 
 Data data;
 

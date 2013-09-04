@@ -1,16 +1,96 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "glob.h"
+#include "data.h"
+#include "alphabet.h"
 
-int end_read_vertice(char *line){
-  while(*line == ' ')
-    line++;
-  if(*line)
-    return 0;
-  return 1;
+extern Data data;
+
+void format_error_vertice(char *symbol){
+  printf("A letra %s não está presente no alfabeto!\n", symbol);
+  exit(0);
 }
 
 void read_vertice(char *line){
+  char **info_vertice = NULL;
+  char **aux = NULL;
+  int size = 0;
+  static int first_time = 1;
+  static int size_info_vertice = 0;
   
+  /* Verificando erro de sintaxe */
+  info_vertice = chop(line);
+  for(aux = info_vertice; *aux; aux++){
+    if(!search_alphabet(*aux))
+      format_error_vertice(*aux);
+    if(first_time)
+      size_info_vertice++;
+    size++;
+  }
+  if(size_info_vertice != size){
+    printf("Vertice com mais informação que outras!\n");
+    exit(0);
+  }
+
+  /* Alocando */
+  if(first_time){
+    if(!(data.vertice_head.vertice = malloc(10 * sizeof *data.vertice_head.vertice))){
+      printf("Memória insuficiente!\n");
+      exit(0);
+    }
+    data.vertice_head.length = 10;
+    data.vertice_head.first_free_pos = 0;
+  }
+  else if(data.vertice_head.first_free_pos == data.vertice_head.length){
+    data.vertice_head.length += data.vertice_head.length;
+    if(!(data.vertice_head.vertice = realloc(data.vertice_head.vertice, data.vertice_head.length * sizeof *data.vertice_head.vertice))){
+      printf("Memória insuficiente\n");
+      exit(0);
+    }
+  }
+
+  /* inserindo informação */
+  data.vertice_head.vertice[data.vertice_head.first_free_pos++].info = info_vertice;
+
+  first_time = 0;
+}
+
+void read_neighborhood(char *line){
+  char **neigborhood = NULL;
+  char **aux = NULL;
+  int size = 0;
+  static int current_vertice = 0;
+
+  neigborhood = chop(line);
+
+  for(aux = neigborhood, size = 0; *aux; aux++, size++)
+    if((int)strlen(*aux) != 1 || (**aux != '0' && **aux != '1')){
+      printf("Erro de sintaxe na matriz de vizinhança!\n");
+      printf("Permitido apenas 0 ou 1 na matriz.\n");
+      exit(0);
+    }
+  if(size != data.vertice_head.first_free_pos){
+    printf("Erro de sintaxe na matriz de vizinhança!\n");
+    printf("Indicação de vizinhaça a mais.\n");
+    exit(0);
+  }
+
+  for(aux = neigborhood, size = 0; *aux; aux++)
+    if(**aux - '0'){
+      if(current_vertice == (int)(aux - neigborhood)){
+	printf("Erro de sintaxe na matriz de vizinhança!\n");
+	printf("Diagonal deve ser zerada.\n");
+	exit(0);
+      }
+
+      /* contando quantidade de possíveis vizinhos */
+      size++;
+    }
+
+  /* Alocando */
+  
+  /* Inserindo neighborhood */
+
+  current_vertice++;
 }
