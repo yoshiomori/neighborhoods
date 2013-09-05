@@ -1,6 +1,19 @@
 #ifndef DATA_H
 #define DATA_H
 
+/* Como imprimir a lista de possíveis vizinhos para cada vértice:  *
+ *  char **aux = NULL;                                             *
+ *  Vertice *v = NULL;                                             *
+ *  int i = 0;                                                     *
+ *  for(i = 0; i < data.vertice_head.first_free_pos; i++){         *
+ *    for(v = data.vertice_head.vertice[i].neighborhood; *v; v++){ *
+ *      for(aux = (*v)->info; *aux; aux++)                         *
+ *            printf("%s ", *aux);                                 *
+ *      printf("\n");                                              *
+ *    }                                                            *
+ *    printf("\n");                                                *
+ *  }                                                              */
+
 typedef struct VERTICE *Vertice;
 struct VERTICE{
   char **info;

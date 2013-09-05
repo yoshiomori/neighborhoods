@@ -57,14 +57,15 @@ void read_vertice(char *line){
 }
 
 void read_neighborhood(char *line){
-  char **neigborhood = NULL;
+  char **neighborhood = NULL;
   char **aux = NULL;
   int size = 0;
   static int current_vertice = 0;
+  Vertice *current_neighborhood = NULL;
 
-  neigborhood = chop(line);
+  neighborhood = chop(line);
 
-  for(aux = neigborhood, size = 0; *aux; aux++, size++)
+  for(aux = neighborhood, size = 0; *aux; aux++, size++)
     if((int)strlen(*aux) != 1 || (**aux != '0' && **aux != '1')){
       printf("Erro de sintaxe na matriz de vizinhança!\n");
       printf("Permitido apenas 0 ou 1 na matriz.\n");
@@ -76,9 +77,9 @@ void read_neighborhood(char *line){
     exit(0);
   }
 
-  for(aux = neigborhood, size = 0; *aux; aux++)
+  for(aux = neighborhood, size = 0; *aux; aux++)
     if(**aux - '0'){
-      if(current_vertice == (int)(aux - neigborhood)){
+      if(current_vertice == (int)(aux - neighborhood)){
 	printf("Erro de sintaxe na matriz de vizinhança!\n");
 	printf("Diagonal deve ser zerada.\n");
 	exit(0);
@@ -89,8 +90,17 @@ void read_neighborhood(char *line){
     }
 
   /* Alocando */
+  if(!(current_neighborhood = malloc((size + 1) * sizeof *current_neighborhood))){
+    printf("Memória insuficiente!\n");
+    exit(0);
+  }
+  current_neighborhood[size] = NULL;
+  data.vertice_head.vertice[current_vertice].neighborhood = current_neighborhood;
   
   /* Inserindo neighborhood */
+  for(aux = neighborhood; *aux; aux++)
+    if(**aux - '0')
+      *(current_neighborhood++) = &data.vertice_head.vertice[(int)(aux - neighborhood)];
 
   current_vertice++;
 }

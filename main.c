@@ -7,10 +7,12 @@
  *     Um arquivo contendo a matriz da vizinhança.                           */
 
 #include "data.h"
+#include <stdio.h>
 
 Data data;
 
 int main(int argc, char **argv){
+
   /* Leitura dos dados */
   read_data(argc, argv);
   return 0;
