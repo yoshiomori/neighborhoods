@@ -6,8 +6,9 @@
  * A função main retorna:                                                    *
  *     Um arquivo contendo a matriz da vizinhança.                           */
 
-#include "data.h"
 #include <stdio.h>
+#include "data.h"
+#include "processing.h"
 
 Data data;
 
@@ -15,5 +16,9 @@ int main(int argc, char **argv){
 
   /* Leitura dos dados */
   read_data(argc, argv);
+
+  /* Processando dados */
+  processing();
+
   return 0;
 }

@@ -90,12 +90,12 @@ void read_neighborhood(char *line){
     }
 
   /* Alocando */
-  if(!(current_neighborhood = malloc((size + 1) * sizeof *current_neighborhood))){
+  if(!(current_neighborhood = malloc(size * sizeof *current_neighborhood))){
     printf("Memória insuficiente!\n");
     exit(0);
   }
-  current_neighborhood[size] = NULL;
-  data.vertice_head.vertice[current_vertice].neighborhood = current_neighborhood;
+  data.vertice_head.vertice[current_vertice].neighborhood.vertice = current_neighborhood;
+  data.vertice_head.vertice[current_vertice].neighborhood.size = size;
   
   /* Inserindo neighborhood */
   for(aux = neighborhood; *aux; aux++)

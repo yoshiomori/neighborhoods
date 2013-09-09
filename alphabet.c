@@ -9,7 +9,7 @@
 
 extern Data data;
 
-int prime[] = {
+static int prime[] = {
   251,
   509,
   1021,
@@ -51,7 +51,7 @@ void memory_error(){
 }
 
 /* Função hash para string */
-int hash(char *s){
+static int hash(char *s){
   int h = 0;
   
   /* O valor 254 abaixo é a quantidade de caracteres no ascii sem *
