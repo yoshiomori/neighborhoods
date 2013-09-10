@@ -13,7 +13,7 @@
 Data data;
 
 int main(int argc, char **argv){
-
+  
   /* Leitura dos dados */
   read_data(argc, argv);
 
