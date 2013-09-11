@@ -69,6 +69,7 @@ void insert_alphabet(char *character){
     i = (i + 1) % length_vector;
   data.alphabet[i] = character;
   vector_free_space--;
+  data.size_alphabet++;
 }
 
 /* aloca espaço sempre que o vetor alcança metade das posições ocupadas */
@@ -109,11 +110,13 @@ void read_alphabet(char *line){
   char **aux = NULL;
 
   data.alphabet = NULL;
+  data.size_alphabet = 0;
 
   if(!line)
     format_error();
 
   symbol = chop(line);
+  data.first_char = *symbol;
   
   /* inserindo simbolos no alfabeto */
   for(aux = symbol; *aux; aux++){

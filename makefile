@@ -1,6 +1,6 @@
 FLAGS := -Wall -pedantic -ansi
 
-neighborhood: main.o data.o alphabet.o constant.o vertice.o processing.o word_table_neig.o
+neighborhood: main.o data.o alphabet.o constant.o vertice.o processing.o word_table.o
 	gcc -o neighborhood $^
 
 main.o: main.c data.h processing.h
@@ -21,7 +21,7 @@ vertice.o: vertice.c vertice.h data.h alphabet.h
 processing.o: processing.c processing.h data.h
 	gcc -c $(FLAGS) $<
 
-word_table_neig.o: word_table_neig.c word_table_neig.h data.h
+word_table.o: word_table.c word_table.h data.h
 	gcc -c $(FLAGS) $<
 
 clean:

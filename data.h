@@ -17,10 +17,31 @@
  */
 typedef struct VERTICE *Vertice;
 
+typedef struct NODE{
+  int not_null;
+  int pos_word;
+  int num_occur;
+}*node;
+
+/* Dado um conjuto de vertices e uma palavra
+ * é possível obter o número de ocorrencia dessa
+ * palavra.
+ * E para cada nó da tabela é possível obter a
+ * palavra e o número de ocorrencia dessa
+ * palavar.
+ */
+typedef struct WORD_TABLE{
+  Vertice *set;
+  node word_vert_neig;
+  int length_vert_neig;
+  node word_neig;
+  int length_neig;
+}*word_table;
+
 typedef struct NEIGHBORHOOD{
   Vertice *vertice;
   int size;
-  int *word_table;
+  word_table table;
 }Neighborhood;
 
 struct VERTICE{
@@ -30,6 +51,8 @@ struct VERTICE{
 
 typedef struct DATA{
   char **alphabet;
+  char *first_char;
+  int size_alphabet;
   float constant;
   struct Vertice_Head{
     Vertice vertice;

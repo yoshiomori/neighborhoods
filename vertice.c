@@ -19,10 +19,10 @@ void read_vertice(char *line){
   static int first_time = 1;
   static int size_info_vertice = 0;
   
-  /* Verificando erro de sintaxe */
+  /* Verificando erro de sintaxe e enumerando letras da info_vertice*/
   info_vertice = chop(line);
   for(aux = info_vertice; *aux; aux++){
-    if(!search_alphabet(*aux))
+    if(!(*aux = search_alphabet(*aux)))/* <- enumerando */
       format_error_vertice(*aux);
     if(first_time)
       size_info_vertice++;
@@ -32,6 +32,7 @@ void read_vertice(char *line){
     printf("Vertice com mais informação que outras!\n");
     exit(0);
   }
+  free(line);
 
   /* Alocando */
   if(first_time){
