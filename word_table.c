@@ -5,11 +5,6 @@
 
 extern Data data;
 
-typedef enum{
-  VERT_NEIG,
-  NEIG
-}type;
-
 static int prime[] = {
   11,
   23,
@@ -62,20 +57,20 @@ word_table word_table_init(int size_set){
   return aux;
 }
 
-long hash(int pos, word_table table, type t){
+long neig_hash(int pos, word_table table){
   unsigned int h = 0;
   Vertice *c;
-  for(c = table->set + t; *c; c++)
+  for(c = table->set + 1; *c; c++)
     h = (h * data.size_alphabet + ((*c)->info[pos] - data.first_char)) % table->length_neig;
   return h;
 }
 
 node neig_search(int pos, word_table table){
-  long h = hash(pos, table, NEIG);
+  long h = neig_hash(pos, table);
   node aux;
   Vertice *c;
   /* Percorre o bloco do linear probing */
-  for(aux = &(table->word_neig[h]); (*aux).not_null; aux++){
+  for(aux = &(table->word_neig[h]); aux->not_null; aux++){
     /* Verifica se a palavra bate com alguma palavra do bloco */
     for(c = table->set; *c && (*c)->info[(*aux).pos_word] == (*c)->info[pos]; c++)
       if(!*(c + 1))
@@ -85,23 +80,20 @@ node neig_search(int pos, word_table table){
 }
 
 void neig_insert(int pos, word_table table){
-  long h = hash(pos, table, NEIG);
-  while(table->word_vert_neig[h].not_null)
+  long h = neig_hash(pos, table);
+  while(table->word_neig[h].not_null)
     h = (h + 1) % table->length_neig;
-  table->word_vert_neig[h].not_null = 1;
-  table->word_vert_neig[h].pos_word = pos;
-  table->word_vert_neig[h].num_occur++;
+  table->word_neig[h].not_null = 1;
+  table->word_neig[h].pos_word = pos;
+  table->word_neig[h].num_occur++;
 }
 
 void word_table_insert(int pos, word_table table){
   node aux;
 
   /* inserindo na  tabela de palavras formado pela vizinhança do vértice */
-  if(!(aux = neig_search(pos, table))){
+  if(!(aux = neig_search(pos, table)))
     neig_insert(pos, table);
-    aux = neig_search(pos, table);
-    printf("%d\n", aux->num_occur);/* <-- Erro de segentação */
-  }
   else
     aux->num_occur++;
 }
