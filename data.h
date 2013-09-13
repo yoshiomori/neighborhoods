@@ -34,8 +34,12 @@ typedef struct WORD_TABLE{
   Vertice *set;
   node word_vert_neig;
   int length_vert_neig;
+  int free_vert_neig;
   node word_neig;
   int length_neig;
+  int free_neig;
+  
+  double f;
 }*word_table;
 
 typedef struct NEIGHBORHOOD{
@@ -46,6 +50,7 @@ typedef struct NEIGHBORHOOD{
 
 struct VERTICE{
   char **info;
+  char size_info;
   Neighborhood neighborhood;
 };
 

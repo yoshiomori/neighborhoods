@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include "data.h"
 #include "word_table.h"
 
@@ -31,6 +32,15 @@ void processing(){
      */
     for(pos = 0; prev->set[0]->info[pos]; pos++)
       word_table_insert(pos, prev);
+    /* calculo do primeira verossimilhança */
+    for(k = 0; k < prev->length_vert_neig; k++)
+      if(prev->word_vert_neig[k].not_null){
+	printf("%d / %d \n", prev->word_vert_neig[k].num_occur, data.vertice_head.vertice[i].size_info);
+	prev->f += log((double)prev->word_vert_neig[k].num_occur / (double)data.vertice_head.vertice[i].size_info);
+      }
+    printf("%f\n", prev->f);
+    printf("next\n\n");
+    
     
     /* Percorrendo todos os conjuntos do conjunto potencia formado
      * pela vizinhança de do vértice data.vertice_head.vertice[i]

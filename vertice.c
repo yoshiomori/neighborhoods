@@ -52,7 +52,8 @@ void read_vertice(char *line){
   }
 
   /* inserindo informação */
-  data.vertice_head.vertice[data.vertice_head.first_free_pos++].info = info_vertice;
+  data.vertice_head.vertice[data.vertice_head.first_free_pos].info = info_vertice;
+  data.vertice_head.vertice[data.vertice_head.first_free_pos++].size_info = size_info_vertice;
 
   first_time = 0;
 }
