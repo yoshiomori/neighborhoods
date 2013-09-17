@@ -58,7 +58,7 @@ typedef struct DATA{
   char **alphabet;
   char *first_char;
   int size_alphabet;
-  float constant;
+  double constant;
   struct Vertice_Head{
     Vertice vertice;
     int length;

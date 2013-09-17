@@ -16,11 +16,11 @@ k l m n o p x a + ...
 ... ... ... ... ... ... ... ... ... ...
 
 # Matriz indicando possíveis vizinhos (Matrix nxn, Refletida, diagonal zerada)
-0 0 1 0 1 1 1
-0 0 0 0 0 1 1
-1 0 0 0 1 1 1
-0 0 0 0 0 1 1
-1 0 1 0 0 1 1
-1 1 1 1 1 0 1
-1 1 1 1 1 1 0
+0 0 1 0 1 0 1
+0 0 1 0 1 1 0
+1 1 0 0 1 0 1
+0 0 0 0 0 1 0
+1 1 1 0 0 0 1
+0 1 0 1 0 0 0
+1 0 1 0 1 0 0
 # Dados devem estar nessa ordem

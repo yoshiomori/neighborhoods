@@ -7,7 +7,7 @@
 extern Data data;
 
 void processing(){
-  int i = 0, j = 0, k;
+  int i = 0, j = 0, k, l, m;
   int stop = 1;
   int pos;
   word_table cur, prev;
@@ -38,6 +38,7 @@ void processing(){
 	printf("%d / %d \n", prev->word_vert_neig[k].num_occur, data.vertice_head.vertice[i].size_info);
 	prev->f += log((double)prev->word_vert_neig[k].num_occur / (double)data.vertice_head.vertice[i].size_info);
       }
+    prev->f -= data.constant * log((double)data.vertice_head.vertice[i].size_info) / log((double)data.size_alphabet); 
     printf("%f\n", prev->f);
     printf("next\n\n");
     
@@ -45,7 +46,17 @@ void processing(){
     /* Percorrendo todos os conjuntos do conjunto potencia formado
      * pela vizinhança de do vértice data.vertice_head.vertice[i]
      */
-    for(k = 1; k != stop; k++);
+    for(k = 1; k != stop; k++){
+      /* pegando a próxima possibilidade da vizinhanca */
+      cur->set[0] = &data.vertice_head.vertice[i];
+      for(l = 0, m = 1; k >> l; l++)
+	if(k >> l & 1){
+	  cur->set[m++] = data.vertice_head.vertice[i].neighborhood.vertice[l];
+	}
+      cur->set[m] = NULL;
+      /* inserindo palavras na tabela
+       */
+    };
 
     free(cur);
     /* prev é a tabela de palavras da vizinhança vencedora */
