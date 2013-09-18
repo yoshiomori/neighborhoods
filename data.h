@@ -50,7 +50,7 @@ typedef struct NEIGHBORHOOD{
 
 struct VERTICE{
   char **info;
-  char size_info;
+  unsigned long int size_info;
   Neighborhood neighborhood;
 };
 

@@ -15,9 +15,9 @@ void format_error_vertice(char *symbol){
 void read_vertice(char *line){
   char **info_vertice = NULL;
   char **aux = NULL;
-  int size = 0;
+  unsigned long int size = 0;
   static int first_time = 1;
-  static int size_info_vertice = 0;
+  static unsigned long int size_info_vertice = 0;
   
   /* Verificando erro de sintaxe e enumerando letras da info_vertice*/
   info_vertice = chop(line);
