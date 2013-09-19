@@ -14,7 +14,7 @@ Data data;
 
 int main(int argc, char **argv){
   int i, j;
-  
+
   /* Leitura dos dados */
   read_data(argc, argv);
 
@@ -22,9 +22,11 @@ int main(int argc, char **argv){
   processing();
 
   for(i = 0; i < data.vertice_head.first_free_pos; i++){
-    for(j = 0; j < data.vertice_head.vertice[i].neighborhood.size; j++)
-      printf("%d ", (int)(&(data.vertice_head.vertice[0]) - data.vertice_head.vertice[i].neighborhood.vertice[j]));
-    printf("\n");
+    printf("%d: ", data.vertice_head.vertice[i].line);
+    for(j = 0; j < data.vertice_head.vertice[i].neighborhood.size; j++){
+      printf("%d, ", data.vertice_head.vertice[i].neighborhood.vertice[j]->line);
+    }
+    printf("\n\n");
   }
 
   return 0;

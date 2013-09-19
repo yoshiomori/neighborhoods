@@ -49,6 +49,7 @@ typedef struct NEIGHBORHOOD{
 }Neighborhood;
 
 struct VERTICE{
+  int line;
   char **info;
   unsigned long int size_info;
   Neighborhood neighborhood;

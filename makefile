@@ -1,4 +1,4 @@
-FLAGS := -Wall -pedantic -ansi
+FLAGS := -Wall -pedantic -ansi -g
 
 neighborhood: main.o data.o alphabet.o constant.o vertice.o processing.o word_table.o
 	gcc -o neighborhood $^

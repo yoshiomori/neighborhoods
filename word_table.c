@@ -146,7 +146,7 @@ node neig_search(int pos,word_table table){
   /* Percorre o bloco do linear probing */
   for(aux = &(table->word_neig[h]); aux->not_null; aux++){
     /* Verifica se a palavra bate com alguma palavra do bloco */
-    for(c = table->set; *c && (*c)->info[(*aux).pos_word] == (*c)->info[pos]; c++)
+    for(c = table->set + 1; *c && (*c)->info[(*aux).pos_word] == (*c)->info[pos]; c++)
       if(!*(c + 1))
 	return aux;
   }
@@ -190,17 +190,37 @@ void neig_insert(int pos, word_table table){
     aux->num_occur++;
 }
 
-double likelihood(word_table table){
-  int i;
-  for(i = 0; i < table->length_vert_neig; i++){
-    if(table->word_vert_neig[i].not_null){
-    }
-  }
-  return 0;
-}
-
 void print_neig(int pos, word_table table){
   Vertice *c;
   for(c = table->set + 1; *c; c++)
     printf("%s ", (*c)->info[pos]);
+}
+
+void dump_neig(void (*visit)(node, word_table), word_table table){
+  node aux, stop;
+  for(aux = table->word_neig, stop = aux + table->length_neig; aux < stop; aux++)
+    if(aux->not_null)
+      visit(aux, table);
+}
+
+void print_all_neig(node n, word_table table){
+  print_neig(n->pos_word, table);
+  printf(": %d\n", n->num_occur);
+}
+
+void dump_vert_neig(void (*visit)(node, word_table), word_table table){
+  node aux, stop;
+  for(aux = table->word_vert_neig, stop = aux + table->length_vert_neig; aux < stop; aux++)
+    if(aux->not_null)
+      visit(aux, table);
+}
+
+void print_all_vert_neig(node n, word_table table){
+  node aux;
+  print_vert_neig(n->pos_word, table);
+  printf(" | ");
+  print_neig(n->pos_word, table);
+  printf(": %d / ", n->num_occur);
+  aux = neig_search(n->pos_word, table);
+  printf("%d\n", aux->num_occur);
 }

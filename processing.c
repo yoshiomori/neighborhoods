@@ -12,7 +12,7 @@ void processing(){
   int pos;
   int size;
   word_table cur, prev, aux_table;
-  node aux;
+  node aux, aux_stop;
 
   /* Calculo da vizinhança para cada vertice
    */
@@ -44,13 +44,28 @@ void processing(){
      * pela vizinhança de do vértice data.vertice_head.vertice[i]
      */
     for(k = 1; k != stop; k++){
+      /* Limpando a tabela de palavras cur */
+      cur->f = 0;
+      cur->free_neig = cur->length_neig;
+      cur->free_vert_neig = cur->length_vert_neig;
+      for(aux = cur->word_vert_neig, aux_stop = aux + cur->length_vert_neig; aux < aux_stop; aux++){
+	if(aux->not_null){
+	  aux->not_null = 0;
+	  aux->num_occur = 0;
+	}
+      }
+      for(aux = cur->word_neig, aux_stop = aux + cur->length_neig; aux < aux_stop; aux++){
+	if(aux->not_null){
+	  aux->not_null = 0;
+	  aux->num_occur = 0;
+	}
+      }
       /* pegando a próxima possibilidade da vizinhanca */
       cur->set[0] = &data.vertice_head.vertice[i];
       for(l = 0, m = 1; k >> l; l++)
       	if(k >> l & 1)
       	  cur->set[m++] = cur->set[0]->neighborhood.vertice[l];
       cur->set[m] = NULL;
-      cur->f = 0;
       
       /* inserindo palavras na tabela
        */
@@ -61,19 +76,18 @@ void processing(){
       
       /* calculo da verossimilhança do subconjunto da vizinhança */
       for(l = 0; l < cur->length_vert_neig; l++)
-	if(cur->word_vert_neig[l].not_null){
-	  aux = neig_search(cur->word_vert_neig[k].pos_word, cur);
-	  cur->f += (double)cur->word_vert_neig[k].num_occur * log((double)cur->word_vert_neig[k].num_occur / (double)aux->num_occur);
-	  printf("%d / %d\n", cur->word_vert_neig[k].num_occur, aux->num_occur);
-	}
-      cur->f -= data.constant * pow((double)data.size_alphabet, (double)data.vertice_head.vertice[i].size_info) * log((double)data.vertice_head.vertice[i].size_info) / log((double)data.size_alphabet);
+      	if(cur->word_vert_neig[l].not_null){
+      	  aux = neig_search(cur->word_vert_neig[l].pos_word, cur);
+      	  cur->f += (double)cur->word_vert_neig[l].num_occur * log((double)cur->word_vert_neig[l].num_occur / (double)aux->num_occur);
+      	}
+      cur->f -= data.constant * pow((double)data.size_alphabet, (double)(m-1)) * log((double)data.vertice_head.vertice[i].size_info) / log((double)data.size_alphabet);
 
       /* Encontrando a maior verossimilhança */
       if(prev->f < cur->f){
-	aux_table = cur;
-	cur = prev;
-	prev = aux_table;
-	size = m - 1;
+      	aux_table = cur;
+      	cur = prev;
+      	prev = aux_table;
+      	size = m - 1;
       }
     }
 

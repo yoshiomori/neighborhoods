@@ -18,6 +18,7 @@ void read_vertice(char *line){
   unsigned long int size = 0;
   static int first_time = 1;
   static unsigned long int size_info_vertice = 0;
+  static int count = 0;
   
   /* Verificando erro de sintaxe e enumerando letras da info_vertice*/
   info_vertice = chop(line);
@@ -52,6 +53,7 @@ void read_vertice(char *line){
   }
 
   /* inserindo informação */
+  data.vertice_head.vertice[data.vertice_head.first_free_pos].line = count++;
   data.vertice_head.vertice[data.vertice_head.first_free_pos].info = info_vertice;
   data.vertice_head.vertice[data.vertice_head.first_free_pos++].size_info = size_info_vertice;
 
