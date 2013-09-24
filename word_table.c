@@ -73,15 +73,14 @@ long vert_neig_hash(int pos, word_table table){
 }
 
 node vert_neig_search(int pos, word_table table){
-  long h = vert_neig_hash(pos, table);
-  node aux;
+  long h;
   Vertice *c;
   /* Percorre o bloco do linear probing */
-  for(aux = &(table->word_vert_neig[h]); aux->not_null; aux++){
+  for(h = vert_neig_hash(pos, table); table->word_vert_neig[h].not_null; h = (h + 1) % table->length_vert_neig){
     /* Verifica se a palavra bate com alguma palavra do bloco */
-    for(c = table->set; *c && (*c)->info[(*aux).pos_word] == (*c)->info[pos]; c++)
+    for(c = table->set; *c && (*c)->info[table->word_vert_neig[h].pos_word] == (*c)->info[pos]; c++)
       if(!*(c + 1))
-	return aux;
+	return &table->word_vert_neig[h];
   }
   return NULL;
 }
@@ -99,6 +98,8 @@ void expand_vert_neig(word_table table){
   for(i = 0; i < aux_length; i++)
     if(aux[i].not_null){
       h = vert_neig_hash(aux[i].pos_word, table);
+      while(table->word_vert_neig[h].not_null)
+	h = (h + 1) % table->length_vert_neig;
       table->word_vert_neig[h].not_null = 1;
       table->word_vert_neig[h].pos_word = aux[i].pos_word;
       table->word_vert_neig[h].num_occur = aux[i].num_occur;
@@ -140,15 +141,15 @@ long neig_hash(int pos,word_table table){
 }
 
 node neig_search(int pos,word_table table){
-  long h = neig_hash(pos, table);
-  node aux;
+  long h;
   Vertice *c;
   /* Percorre o bloco do linear probing */
-  for(aux = &(table->word_neig[h]); aux->not_null; aux++){
+  for(h = neig_hash(pos, table); table->word_neig[h].not_null; h = (h + 1) % table->length_neig){
     /* Verifica se a palavra bate com alguma palavra do bloco */
-    for(c = table->set + 1; *c && (*c)->info[(*aux).pos_word] == (*c)->info[pos]; c++)
+    for(c = table->set + 1; *c && (*c)->info[table->word_neig[h].pos_word] == (*c)->info[pos]; c++){
       if(!*(c + 1))
-	return aux;
+	return &table->word_neig[h];
+    }
   }
   return NULL;
 }
@@ -165,6 +166,8 @@ void expand_neig(word_table table){
   for(i = 0; i < aux_length; i++)
     if(aux[i].not_null){
       h = neig_hash(aux[i].pos_word, table);
+      while(table->word_neig[h].not_null)
+	h = (h + 1) % table->length_neig;
       table->word_neig[h].not_null = 1;
       table->word_neig[h].pos_word = aux[i].pos_word;
       table->word_neig[h].num_occur = aux[i].num_occur;
@@ -176,6 +179,7 @@ void expand_neig(word_table table){
 void neig_insert(int pos, word_table table){
   long h = neig_hash(pos, table);
   node aux;
+
   /* inserindo na  tabela de palavras formado pela vizinhança do vértice */
   if(!(aux = neig_search(pos, table))){
     while(table->word_neig[h].not_null)
@@ -196,11 +200,18 @@ void print_neig(int pos, word_table table){
     printf("%s ", (*c)->info[pos]);
 }
 
+void print_neig_test(node n, word_table table){
+  print_neig(n->pos_word, table);
+  printf(":%ld, ", neig_hash(n->pos_word, table));
+}
+
 void dump_neig(void (*visit)(node, word_table), word_table table){
   node aux, stop;
   for(aux = table->word_neig, stop = aux + table->length_neig; aux < stop; aux++)
-    if(aux->not_null)
+    if(aux->not_null){
+      printf("pos: %ld ", aux - table->word_neig);
       visit(aux, table);
+    }
 }
 
 void print_all_neig(node n, word_table table){

@@ -117,7 +117,7 @@ char *read_line(FILE *file){
   }
 
   while(!line && !feof(file))
-    line  = read_line(file);
+    line = read_line(file);
   
   return line;
 }

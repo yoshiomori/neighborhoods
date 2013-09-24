@@ -11,12 +11,19 @@ void processing(){
   int stop;
   int pos;
   int size;
-  word_table cur, prev, aux_table;
+  word_table cur, prev, aux_table, *select;
   node aux, aux_stop;
+
+  select = malloc(data.vertice_head.first_free_pos * sizeof *select);
+  if(!select){
+    printf("Memória insuficiente\n");
+    exit(0);
+  }
 
   /* Calculo da vizinhança para cada vertice
    */
-  for(i = 0, size = 0; i < data.vertice_head.first_free_pos; i++){
+  for(i = 0; i < data.vertice_head.first_free_pos; i++){
+    size = 0;
 
     /* Alocando */
     cur = word_table_init(data.vertice_head.vertice[i].neighborhood.size + 2);
@@ -78,12 +85,14 @@ void processing(){
       for(l = 0; l < cur->length_vert_neig; l++)
       	if(cur->word_vert_neig[l].not_null){
       	  aux = neig_search(cur->word_vert_neig[l].pos_word, cur);
+	  if(!aux)
+	    print_neig(cur->word_vert_neig[l].pos_word, cur);
       	  cur->f += (double)cur->word_vert_neig[l].num_occur * log((double)cur->word_vert_neig[l].num_occur / (double)aux->num_occur);
       	}
       cur->f -= data.constant * pow((double)data.size_alphabet, (double)(m-1)) * log((double)data.vertice_head.vertice[i].size_info) / log((double)data.size_alphabet);
 
       /* Encontrando a maior verossimilhança */
-      if(prev->f < cur->f){
+      if(prev->f <= cur->f){
       	aux_table = cur;
       	cur = prev;
       	prev = aux_table;
@@ -92,6 +101,7 @@ void processing(){
     }
 
     free(cur);
+    select[i] = prev;
     /* prev é a tabela de palavras da vizinhança vencedora */
     data.vertice_head.vertice[i].neighborhood.table = prev;
     free(data.vertice_head.vertice[i].neighborhood.vertice);
@@ -99,4 +109,14 @@ void processing(){
     data.vertice_head.vertice[i].neighborhood.vertice = (prev->set) + 1;
     data.vertice_head.vertice[i].neighborhood.size = size;
   }
+
+  /* Atribuindo */
+
+  /* Criando simetria entre a vizinhaça, exemplo:
+   * 2: 0, 1, 3
+   * 4: 2
+   * Então
+   * 2: 0, 1, 3, 4
+   * 4: 2
+   */
 }
