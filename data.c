@@ -132,7 +132,7 @@ void read_data(int argc, char **argv){
     while(!feof(file)){
       line = read_line(file);
       for(aux = line; *aux; aux++)
-	if(*aux == '#')
+	if(*aux == '#' || *aux == '\r')
 	  *aux = '\0';
       switch(state){
       case 0:

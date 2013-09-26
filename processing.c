@@ -81,8 +81,6 @@ void processing(){
       for(l = 0; l < cur->length_vert_neig; l++)
       	if(cur->word_vert_neig[l].not_null){
       	  aux = neig_search(cur->word_vert_neig[l].pos_word, cur);
-	  if(!aux)
-	    print_neig(cur->word_vert_neig[l].pos_word, cur);
       	  cur->f += (double)cur->word_vert_neig[l].num_occur * log((double)cur->word_vert_neig[l].num_occur / (double)aux->num_occur);
       	}
       cur->f -= data.constant * pow((double)data.size_alphabet, (double)(m-1)) * log((double)data.vertice_head.vertice[i].size_info) / log((double)data.size_alphabet);
