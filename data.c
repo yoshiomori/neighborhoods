@@ -110,14 +110,6 @@ char *read_line(FILE *file){
     size_of_line += read_chars;
 
   } while(!is_line_over);
-
-  if(line[0] == '#'){
-    free(line);
-    line = NULL;
-  }
-
-  while(!line && !feof(file))
-    line = read_line(file);
   
   return line;
 }
@@ -126,9 +118,8 @@ char *read_line(FILE *file){
  * e lê a informação e atribui nas variáveis do programa.                */
 void read_data(int argc, char **argv){
   FILE *file = NULL;
-  char *line = NULL;
-  /*teste char *line = NULL;*/
-
+  char *line, *aux;
+  int state = 0;
   if(argc != 2)
     info();
   else{
@@ -138,13 +129,57 @@ void read_data(int argc, char **argv){
     }
 
     /* Lendo o arquivo */
-    read_alphabet(read_line(file));
-    read_line(file);
-    read_constant(read_line(file));
-    read_line(file);
-    while(!end_read_block((line = read_line(file))))
-      read_vertice(line);
-    while(!end_read_block((line = read_line(file))))
-      read_neighborhood(line);
+    while(!feof(file)){
+      line = read_line(file);
+      for(aux = line; *aux; aux++)
+	if(*aux == '#')
+	  *aux = '\0';
+      switch(state){
+      case 0:
+	if(*line){
+	  read_alphabet(line);
+	  state = 1;
+	}
+	break;
+      case 1:
+	if(*line){
+	  read_constant(line);
+	  state = 2;
+	}
+	break;
+      case 2:
+	if(*line){
+	  read_vertice(line);
+	  state = 3;
+	}
+	break;
+      case 3:
+	if(*line)
+	  read_vertice(line);
+	else
+	  state = 4;
+	break;
+      case 4:
+	if(*line){
+	  read_neighborhood(line);
+	  state = 5;
+	}
+	break;
+      case 5:
+	if(*line)
+	  read_neighborhood(line);
+	else
+	  state = 6;
+	break;
+      default:
+	break;
+      }
+      if(!*line)
+	free(line);
+    }
+    if(state < 5){
+      printf("Erro no arquivo\n");
+      exit(0);
+    }
   }
 }

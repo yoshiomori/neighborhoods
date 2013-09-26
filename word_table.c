@@ -126,10 +126,10 @@ void vert_neig_insert(int pos, word_table table){
     aux->num_occur++;
 }
 
-void print_vert_neig(int pos, word_table table){
+void print_vert_neig(int pos, word_table table, FILE *file){
   Vertice *c;
   for(c = table->set; *c; c++)
-    printf("%s ", (*c)->info[pos]);
+    fprintf(file, "%s ", (*c)->info[pos]);
 }
 
 long neig_hash(int pos,word_table table){
@@ -194,15 +194,10 @@ void neig_insert(int pos, word_table table){
     aux->num_occur++;
 }
 
-void print_neig(int pos, word_table table){
+void print_neig(int pos, word_table table, FILE *file){
   Vertice *c;
   for(c = table->set + 1; *c; c++)
-    printf("%s ", (*c)->info[pos]);
-}
-
-void print_neig_test(node n, word_table table){
-  print_neig(n->pos_word, table);
-  printf(":%ld, ", neig_hash(n->pos_word, table));
+    fprintf(file, "%s ", (*c)->info[pos]);
 }
 
 void dump_neig(void (*visit)(node, word_table), word_table table){
@@ -214,9 +209,9 @@ void dump_neig(void (*visit)(node, word_table), word_table table){
     }
 }
 
-void print_all_neig(node n, word_table table){
-  print_neig(n->pos_word, table);
-  printf(": %d\n", n->num_occur);
+void print_all_neig(node n, word_table table, FILE *file){
+  print_neig(n->pos_word, table, file);
+  fprintf(file, ": %d\n", n->num_occur);
 }
 
 void dump_vert_neig(void (*visit)(node, word_table), word_table table){
@@ -226,12 +221,11 @@ void dump_vert_neig(void (*visit)(node, word_table), word_table table){
       visit(aux, table);
 }
 
-void print_all_vert_neig(node n, word_table table){
+void print_all_vert_neig(node n, word_table table, FILE *file){
   node aux;
-  print_vert_neig(n->pos_word, table);
-  printf(" | ");
-  print_neig(n->pos_word, table);
-  printf(": %d / ", n->num_occur);
+  print_vert_neig(n->pos_word, table, file);
+  fprintf(file, " | ");
+  print_neig(n->pos_word, table, file);
   aux = neig_search(n->pos_word, table);
-  printf("%d\n", aux->num_occur);
+  fprintf(file, ": %f\n", (float)n->num_occur / (float)aux->num_occur);
 }

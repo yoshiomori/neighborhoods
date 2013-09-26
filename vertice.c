@@ -108,3 +108,20 @@ void read_neighborhood(char *line){
 
   current_vertice++;
 }
+
+Vertice binary_search(Vertice v, Vertice *n, int size){
+  int p = size / 2;
+  if(v == n[p])
+    return v;
+  else if(p){
+    if(v < n[p])
+      return binary_search(v, n, p);
+    if(v > n[p])
+      return binary_search(v, &n[p + 1], size - p - 1);
+  }
+  return NULL;
+}
+
+Vertice neighborhood_search(Vertice v, Neighborhood *n){
+  return binary_search(v, n->vertice, n->size);
+}

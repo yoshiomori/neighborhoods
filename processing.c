@@ -3,6 +3,7 @@
 #include <math.h>
 #include "data.h"
 #include "word_table.h"
+#include "vertice.h"
 
 extern Data data;
 
@@ -11,14 +12,9 @@ void processing(){
   int stop;
   int pos;
   int size;
-  word_table cur, prev, aux_table, *select;
+  word_table cur, prev, aux_table;
   node aux, aux_stop;
-
-  select = malloc(data.vertice_head.first_free_pos * sizeof *select);
-  if(!select){
-    printf("Memória insuficiente\n");
-    exit(0);
-  }
+  Vertice v, aux_v, *mod;
 
   /* Calculo da vizinhança para cada vertice
    */
@@ -101,7 +97,6 @@ void processing(){
     }
 
     free(cur);
-    select[i] = prev;
     /* prev é a tabela de palavras da vizinhança vencedora */
     data.vertice_head.vertice[i].neighborhood.table = prev;
     free(data.vertice_head.vertice[i].neighborhood.vertice);
@@ -110,8 +105,6 @@ void processing(){
     data.vertice_head.vertice[i].neighborhood.size = size;
   }
 
-  /* Atribuindo */
-
   /* Criando simetria entre a vizinhaça, exemplo:
    * 2: 0, 1, 3
    * 4: 2
@@ -119,4 +112,45 @@ void processing(){
    * 2: 0, 1, 3, 4
    * 4: 2
    */
+  mod = calloc(data.vertice_head.first_free_pos, sizeof *mod);
+  for(i = 0; i < data.vertice_head.first_free_pos; i++)
+    for(j = 0; j < data.vertice_head.vertice[i].neighborhood.size; j++)
+      if(!neighborhood_search(&(data.vertice_head.vertice[i]), data.vertice_head.vertice[i].neighborhood.vertice[j]->neighborhood)){
+	/* Corrigindo a vizinhaça */
+	for(k = 0, v = &(data.vertice_head.vertice[i]); k < data.vertice_head.vertice[i].neighborhood.vertice[j]->neighborhood.size; k++)
+	  if(v < data.vertice_head.vertice[i].neighborhood.vertice[j]->neighborhood.vertice[k]){
+	    aux_v = v;
+	    v = data.vertice_head.vertice[i].neighborhood.vertice[j]->neighborhood.vertice[k];
+	    data.vertice_head.vertice[i].neighborhood.vertice[j]->neighborhood.vertice[k] = aux_v;
+	  }
+	data.vertice_head.vertice[i].neighborhood.vertice[j]->neighborhood.vertice[k] = v;
+	data.vertice_head.vertice[i].neighborhood.vertice[j]->neighborhood.vertice[k + 1] = NULL;
+	data.vertice_head.vertice[i].neighborhood.vertice[j]->neighborhood.size++;
+	mod[j] = data.vertice_head.vertice[i].neighborhood.vertice[j];
+      }
+
+  /* Recriando tabela */
+  for(i = 0; i < data.vertice_head.first_free_pos; i++){
+    if(mod[i]){
+      /* Limpando a tabela de palavras */
+      mod[i]->neighborhood.table->free_neig = mod[i]->neighborhood.table->length_neig;
+      mod[i]->neighborhood.table->free_vert_neig = mod[i]->neighborhood.table->length_vert_neig;
+      for(aux = mod[i]->neighborhood.table->word_vert_neig, aux_stop = aux + mod[i]->neighborhood.table->length_vert_neig; aux < aux_stop; aux++){
+	if(aux->not_null){
+	  aux->not_null = 0;
+	  aux->num_occur = 0;
+	}
+      }
+      for(aux = mod[i]->neighborhood.table->word_neig, aux_stop = aux + mod[i]->neighborhood.table->length_neig; aux < aux_stop; aux++){
+	if(aux->not_null){
+	  aux->not_null = 0;
+	  aux->num_occur = 0;
+	}
+      }
+      for(pos = 0; mod[i]->neighborhood.table->set[0]->info[pos]; pos++){
+	neig_insert(pos, mod[i]->neighborhood.table);
+	vert_neig_insert(pos, mod[i]->neighborhood.table);
+      }
+    }
+  }
 }

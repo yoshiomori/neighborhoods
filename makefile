@@ -18,7 +18,7 @@ constant.o: constant.c data.h
 vertice.o: vertice.c vertice.h data.h alphabet.h
 	gcc -c $(FLAGS) $<
 
-processing.o: processing.c processing.h data.h
+processing.o: processing.c processing.h data.h vertice.h
 	gcc -c $(FLAGS) $<
 
 word_table.o: word_table.c word_table.h data.h
