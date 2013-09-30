@@ -1,4 +1,4 @@
-data.vertice_head.vertice[i].neighborhood.verticeFLAGS := -Wall -pedantic -ansi -g
+FLAGS := -Wall -pedantic -ansi -g
 
 neighborhood: main.o data.o alphabet.o constant.o vertice.o processing.o word_table.o
 	gcc -o neighborhood $^

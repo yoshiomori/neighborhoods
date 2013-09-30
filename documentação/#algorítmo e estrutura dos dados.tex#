@@ -25,6 +25,5 @@ Mas a parte importante do programa é o Processamento que irá fazer o calculo d
   \SetAlgoLined
   \KwData{Vértices, vizinhos de cada vértice e constante}
   \KwResult{Vizinhos de cada vertice que maximizam a função verossimilhança}
-  
-
+  \for 
 \end{document}
