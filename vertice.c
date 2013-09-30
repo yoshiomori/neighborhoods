@@ -33,7 +33,8 @@ void read_vertice(char *line){
     printf("Vertice com mais informação que outras!\n");
     exit(0);
   }
-  free(line);
+  if(line)
+    free(line);
 
   /* Alocando */
   if(first_time){

@@ -4,4 +4,12 @@
 
 \begin{document}
 
+Entrada: nome\_do\_arquivo.
+Saída: arquivo\_de\_saída.
+Nome\_do\_arquivo deve estar no formato do arquivo\_padrão.
+
+Arquivo\_de\_saída será algo da forma:
+
+Olá.
+
 \end{document}

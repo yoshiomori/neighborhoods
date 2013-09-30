@@ -3,4 +3,4 @@
 
 void read_constant(char *);
 
-#endif "CONSTANT_H"
+#endif /* CONSTANT_H */

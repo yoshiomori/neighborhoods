@@ -90,7 +90,8 @@ void alloc_alphabet(){
     for(i = 0; i < aux_length_vector; i++)
       if(aux_alphabet[i])
 	insert_alphabet(aux_alphabet[i]);
-    free(aux_alphabet);
+    if(aux_alphabet)
+      free(aux_alphabet);
   }
 }
 
@@ -130,6 +131,8 @@ void read_alphabet(char *line){
 }
 
 void delete_alphabet(){
-  free(data.alphabet);
-  free(symbol);
+  if(data.alphabet)
+    free(data.alphabet);
+  if(symbol)
+    free(symbol);
 }

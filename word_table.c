@@ -105,7 +105,8 @@ void expand_vert_neig(word_table table){
       table->word_vert_neig[h].num_occur = aux[i].num_occur;
       table->free_vert_neig--;
     }
-  free(aux);
+  if(aux)
+    free(aux);
 }
 
 void vert_neig_insert(int pos, word_table table){
@@ -173,7 +174,8 @@ void expand_neig(word_table table){
       table->word_neig[h].num_occur = aux[i].num_occur;
       table->free_neig--;
     }
-  free(aux);
+  if(aux)
+    free(aux);
 }
 
 void neig_insert(int pos, word_table table){
