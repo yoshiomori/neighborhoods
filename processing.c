@@ -14,7 +14,7 @@ void processing(){
   int size;
   word_table cur, prev, aux_table;
   node aux, aux_stop;
-  Vertice v, aux_v, *mod;
+  /* Vertice v, aux_v, *mod; */
 
   /* Calculo da vizinhança para cada vertice
    */
