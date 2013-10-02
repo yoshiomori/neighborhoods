@@ -7,6 +7,7 @@
  *     Um arquivo contendo a matriz da vizinhança.                           */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "data.h"
 #include "processing.h"
 #include "word_table.h"
@@ -14,7 +15,7 @@
 Data data;
 
 int main(int argc, char **argv){
-  int i, j;
+  int i, j, *line;
   node n, stop;
   FILE *file;
 
@@ -45,6 +46,20 @@ int main(int argc, char **argv){
 	}
     fprintf(file, "\n\n");
   }
+  fclose(file);
+
+  file = fopen("outneig.txt", "w");
+  line = calloc(data.vertice_head.first_free_pos, sizeof *line);
+  for(i = 0; i < data.vertice_head.first_free_pos; i++){
+    for(j = 0; j < data.vertice_head.vertice[i].neighborhood.size; j++)
+      line[data.vertice_head.vertice[i].neighborhood.vertice[j]->line] = 1;
+    for(j = 0; j < data.vertice_head.first_free_pos; j++){
+      fprintf(file, "%d ", line[j]);
+      line[j] = 0;
+    }
+    fprintf(file, "\n");
+  }
+  fclose(file);
 
   return 0;
 }
