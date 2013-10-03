@@ -1,28 +1,19 @@
-FLAGS := -Wall -pedantic -ansi -g
+VPATH = src
+objects = main.o data.o alphabet.o constant.o vertice.o processing.o word_table.o
+objdir := objects
+objs := $(addprefix $(objdir)/, $(objects))
 
-neighborhood: main.o data.o alphabet.o constant.o vertice.o processing.o word_table.o
-	gcc -o neighborhood $^
+neighborhood: $(objs)
+	cc -o neighborhood $(objs)
 
-main.o: main.c data.h processing.h
-	gcc -c $(FLAGS) $<
+$(objdir)/%.o : %.c
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
 
-data.o: data.c data.h alphabet.h constant.h vertice.h
-	gcc -c $(FLAGS) $<
+$(objs): | $(objdir)
 
-alphabet.o: alphabet.c alphabet.h data.h
-	gcc -c $(FLAGS) $<
-
-constant.o: constant.c data.h
-	gcc -c $(FLAGS) $<
-
-vertice.o: vertice.c vertice.h data.h alphabet.h
-	gcc -c $(FLAGS) $<
-
-processing.o: processing.c processing.h data.h vertice.h
-	gcc -c $(FLAGS) $<
-
-word_table.o: word_table.c word_table.h data.h
-	gcc -c $(FLAGS) $<
+$(objdir):
+	mkdir $(objdir)
 
 clean:
-	rm *.o *~ neighborhood \#*
+	if [ -d "objects" ]; then rm -fr objects; fi
+	if [ -x "neighborhood" ]; then rm neighborhood; fi
