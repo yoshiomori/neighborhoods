@@ -26,7 +26,10 @@ int main(int argc, char **argv){
   processing();
 
   /* Impressão */
-  file = fopen("out.txt", "w");
+  if(argc == 2)
+    file = fopen("out.txt", "w");
+  else
+    file = fopen(argv[2], "w");
   for(i = 0; i < data.vertice_head.first_free_pos; i++){
     fprintf(file, "%d: ", data.vertice_head.vertice[i].line);
     for(j = 0; j < data.vertice_head.vertice[i].neighborhood.size; j++){
@@ -48,7 +51,10 @@ int main(int argc, char **argv){
   }
   fclose(file);
 
-  file = fopen("outneig.txt", "w");
+  if(argc == 2)
+    file = fopen("outneig.txt", "w");
+  else
+    file = fopen(argv[3], "w");
   line = calloc(data.vertice_head.first_free_pos, sizeof *line);
   for(i = 0; i < data.vertice_head.first_free_pos; i++){
     for(j = 0; j < data.vertice_head.vertice[i].neighborhood.size; j++)

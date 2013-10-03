@@ -74,7 +74,7 @@ char **chop(char *line){
 }
 
 void info(){
-  printf("USO:\n\t./neighborhood NOME_DO_ARQUIVO_DE_DADOS\n\n");
+  printf("USO:\n\t./neighborhood NOME_DO_ARQUIVO_DE_DADOS [nome_do_arquivo_de_saída_prob] [nome_do_arquivo_de_saída_neig]\n\n");
   exit(0);
 }
 
@@ -120,7 +120,7 @@ void read_data(int argc, char **argv){
   FILE *file = NULL;
   char *line, *aux;
   int state = 0;
-  if(argc != 2)
+  if(argc != 2 && argc != 4)
     info();
   else{
     if(!(file = fopen(argv[1], "r"))){
