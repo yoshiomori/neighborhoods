@@ -1,0 +1,8 @@
+#!/bin/bash
+x=0
+for f in $1/*
+do
+echo processando $f
+./neighborhood $f $2/prob$x.txt $2/neig$x.txt
+let "x++"
+done
