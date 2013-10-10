@@ -3,6 +3,7 @@ objects = main.o data.o alphabet.o constant.o vertice.o processing.o word_table.
 objdir := objects
 objs := $(addprefix $(objdir)/, $(objects))
 
+neighborhood: CFLAGS = -g
 neighborhood: $(objs)
 	cc -o neighborhood $(objs)
 

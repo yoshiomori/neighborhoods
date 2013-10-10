@@ -94,12 +94,16 @@ void processing(){
       }
     }
 
-    if(cur)
+    if(cur){
       free(cur);
+      cur = NULL;
+    }
     /* prev é a tabela de palavras da vizinhança vencedora */
     data.vertice_head.vertice[i].neighborhood.table = prev;
-    if(data.vertice_head.vertice[i].neighborhood.vertice)
+    if(data.vertice_head.vertice[i].neighborhood.vertice){
       free(data.vertice_head.vertice[i].neighborhood.vertice);
+      data.vertice_head.vertice[i].neighborhood.vertice = NULL;
+    }
     /* referenciando a vizinhança vencedora */
     data.vertice_head.vertice[i].neighborhood.vertice = (prev->set) + 1;
     data.vertice_head.vertice[i].neighborhood.size = size;

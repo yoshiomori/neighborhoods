@@ -175,8 +175,10 @@ void read_data(int argc, char **argv){
 	break;
       }
       if(line)
-	if(!*line)
+	if(!*line){
 	  free(line);
+	  line = NULL;
+	}
     }
     if(state < 5){
       printf("Erro no arquivo\n");
