@@ -1,5 +1,4 @@
 #!/bin/bash
-x=0
 for f in $1/*
 do
 filename=$(basename "$f")
@@ -8,3 +7,10 @@ echo processando ${filename}
 ./neighborhoods/neighborhood $f $2/${filename}-prob.txt $2/${filename}-neig.txt
 ./c_neig/c_neig $2/${filename}-neig.txt $3
 done
+if [ -a $4 ]; then rm $4; fi
+for f in $2/*-neig.txt
+do
+    ./neig_out/neig_out $f >> $4
+    printf "\n" >> $4
+done
+
