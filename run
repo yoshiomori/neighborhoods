@@ -2,7 +2,9 @@
 x=0
 for f in $1/*
 do
-echo processando $f
-./neighborhood $f $2/prob$x.txt $2/neig$x.txt
-let "x++"
+filename=$(basename "$f")
+filename="${filename%.*}"
+echo processando ${filename}
+./neighborhoods/neighborhood $f $2/${filename}-prob.txt $2/${filename}-neig.txt
+./c_neig/c_neig $2/${filename}-neig.txt $3
 done

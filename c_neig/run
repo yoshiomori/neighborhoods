@@ -1,0 +1,8 @@
+#!/bin/bash
+for f in $1/*
+do
+filename=$(basename "$f")
+filename="${filename%.*}"
+echo processando ${filename}
+./c_neig $f $2/${filename}-out.txt $3
+done
